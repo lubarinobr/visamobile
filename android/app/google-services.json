@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "335368715601",
+    "firebase_url": "https://visasmobile.firebaseio.com",
+    "project_id": "visasmobile",
+    "storage_bucket": "visasmobile.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:335368715601:android:f8c5d8341b3e289d",
+        "android_client_info": {
+          "package_name": "com.visamobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "335368715601-eool6ps6g8ipgps4ei29k3v9p0boleek.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzbyvO1QOuYKlV0e3izdUGrDQTJjB5PT0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "335368715601-eool6ps6g8ipgps4ei29k3v9p0boleek.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

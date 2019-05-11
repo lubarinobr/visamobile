@@ -1,18 +1,30 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import api from '../services/api';
-import { Card, Image } from 'react-native-elements';
+import { Card, Button, Overlay } from 'react-native-elements';
+import Notification from '../services/notification';
 
 export default class Main extends Component {
 
     state = {
         visaType: "",
-        status: ""
+        status: "",
+        isVisible: false
     }
 
     componentDidMount() {
+        this.loadNotification();
         this.loadUser();
+    }
+
+    componentWillUnmount() {
+        this.loadNotification();
+        this.loadUser();
+    }
+
+    loadNotification = async () => {
+        new Notification().init();
     }
 
     loadUser = async () => {
@@ -26,13 +38,34 @@ export default class Main extends Component {
         return `Status: ${this.state.status}`;
     }
 
+    enterNewVisa = () => {
+        console.log("Chamou overlay")
+        this.setState({isVisible: true});
+    }
+
+    renderOverlay = () => {
+        return (
+            <View style={style.overlay}>
+                <Overlay
+                    isVisible={this.state.isVisible}
+                    windowBackgroundColor="rgba(255, 255, 255, .8)"  
+                    overlayBackgroundColor="red"
+                    onBackdropPress={() => this.setState({ isVisible: false })}
+                    width="auto"
+                    height="auto"
+                    >
+                    <Text>Hello from Overlay!</Text>
+                </Overlay>
+            </View>
+        );
+    }
+
     render() {
         const { navigate } = this.props.navigation;
 
         return (
-            <View>
+            <View style={{flex:1}}> 
                 <Card
-                    wrapperStyle={{flex: 1}}
                     imageStyle={{height:200, width:320}}
                     image={require('../images/bandeira-portugal.jpg')}
                     featuredTitle="Visto Português"
@@ -41,8 +74,25 @@ export default class Main extends Component {
                     featuredSubtitle={this.getStatus()}
                     >
                 </Card>
+
+                <Button
+                    icon={
+                        <Icon
+                        name="book" 
+                        size={15}
+                        color="white"
+                        />
+                        
+                    }
+                    containerStyle={{padding: 10}}
+                    iconRight
+                    title="Inserir visto "
+                    onPress={() => this.enterNewVisa()}
+                    />
+                    {this.renderOverlay()} 
             </View>
         );
+
     }
 
 }
@@ -54,14 +104,8 @@ Main.navigationOptions = {
 
 const style = StyleSheet.create({
     title: {
-        // flex: 1,
-        // justifyContent: 'flex-start',
-        // alignSelf: 'flex-start'
         alignSelf: 'flex-start',
         paddingLeft: 10,
-        textShadowOffset: { width: 20, height: 220 },
-        textShadowRadius: 20,
-        textShadowColor: '#000',
         fontSize:25
     },
     subtitle: {

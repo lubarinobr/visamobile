@@ -26,12 +26,17 @@ export default class Documents extends Component {
         const checks = this.state.checklist;
         checks[index].checked = !checks[index].checked;
 
+        this.updateCheckList(checks[index].id)
         this.setState({checklist: checks});
     }
 
     showDescription = (check) => {
-        const { name, description } = check;
+        const { name, description, id } = check;
         this.props.navigation.navigate('DocumentsDetail', { name: name , description: description });
+    }
+
+    updateCheckList = async (id) => {
+        const result = await api.put(`/users/checklist/${id}`);
     }
 
     render() {

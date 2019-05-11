@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import api from '../services/api';
 import { Card, Button, Overlay } from 'react-native-elements';
 import Notification from '../services/notification';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class Main extends Component {
 
@@ -14,13 +15,12 @@ export default class Main extends Component {
     }
 
     componentDidMount() {
-        this.loadNotification();
         this.loadUser();
     }
 
     componentWillUnmount() {
-        this.loadNotification();
         this.loadUser();
+        this.loadNotification();
     }
 
     loadNotification = async () => {
@@ -28,10 +28,19 @@ export default class Main extends Component {
     }
 
     loadUser = async () => {
-        const resultUser = await api.get("/visas/user?email=matheus.lubarino1@gmail.com") 
-        const {visaType: {name}, status } = resultUser.data;
-        
-        this.setState({ visaType: name, status: status});
+        let email = await AsyncStorage.getItem("email");
+        console.log(`email teste = ${email}`);
+        if(!email) {
+            this.props.navigation.navigate("Config");
+        }else {
+            const resultUser = await api.get(`/visas/user?email=${email}`) 
+            const {visaType: {name}, status } = resultUser.data;
+            
+            this.setState({ visaType: name, status: status});
+
+            this.loadNotification();
+
+        }
     }
 
     getStatus = () => {
@@ -99,7 +108,7 @@ export default class Main extends Component {
 
 Main.navigationOptions = {
     title: "Home",
-    tabBarIcon: <Icon name="home" size={18} color="#999" />
+    tabBarIcon: <Icon name="home" size={25} color="#999" />
 }
 
 const style = StyleSheet.create({

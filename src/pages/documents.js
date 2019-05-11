@@ -3,6 +3,7 @@ import { View, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import api from '../services/api';
 import { CheckBox } from 'react-native-elements'
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class Documents extends Component {
 
@@ -15,7 +16,12 @@ export default class Documents extends Component {
     }
 
     loadUserCheckList = async () => {
-        const result = await api.get("/users?email=matheus.lubarino1@gmail.com");
+        let email = AsyncStorage.getItem("email");
+        if(!email) {
+            this.props.navigation.navigate("Config");
+        }
+
+        const result = await api.get(`/users?email=${email}`);
 
         const { checklist } = result.data;
 
@@ -61,5 +67,5 @@ export default class Documents extends Component {
 
 Documents.navigationOptions = {
     title: "Documentos",
-    tabBarIcon: <Icon name="file-document-box-outline" size={18} color="#999" />
+    tabBarIcon: <Icon name="file-document-box-outline" size={25} color="#999" />
 }

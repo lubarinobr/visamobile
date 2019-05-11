@@ -29,7 +29,6 @@ export default class Main extends Component {
 
     loadUser = async () => {
         let email = await AsyncStorage.getItem("email");
-        console.log(`email teste = ${email}`);
         if(!email) {
             this.props.navigation.navigate("Config");
         }else {

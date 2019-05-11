@@ -22,6 +22,18 @@ export default class Config extends Component {
         }
     }
 
+    componentDidMount() {
+      this.getEmail();
+    }
+
+    getEmail = async () => {
+      const email = await AsyncStorage.getItem("email");
+
+      if(email) {
+        this.props.navigation.navigate('Home');
+      }
+    }
+
     render() {
         return (
         <View>

@@ -5,9 +5,9 @@ import Config from './pages/config';
 import DocumentsDetail from './pages/documents-details';
 
 const app = createBottomTabNavigator({
+    Config,
     Home: Main,
     Documents,
-    Config
 });
 
 const stackApp = createStackNavigator({

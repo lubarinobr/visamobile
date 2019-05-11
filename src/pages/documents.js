@@ -16,13 +16,13 @@ export default class Documents extends Component {
     }
 
     loadUserCheckList = async () => {
-        let email = AsyncStorage.getItem("email");
+        let email = await AsyncStorage.getItem("email");
         if(!email) {
             this.props.navigation.navigate("Config");
         }
 
         const result = await api.get(`/users?email=${email}`);
-
+        console.log(result);
         const { checklist } = result.data;
 
         this.setState({checklist});

@@ -1,5 +1,5 @@
 import React , { Component, Fragment } from 'react';
-import { View, Button, TextInput, Text, Alert } from 'react-native';
+import { View, Button, TextInput, Text, Alert, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { Formik } from 'formik';
 import api from '../services/api';
@@ -36,7 +36,8 @@ export default class Config extends Component {
 
     render() {
         return (
-        <View>
+        <View style={styles.container}>
+          <View style={styles.formik}>
           <Formik
             initialValues={{ email: '' }}
             onSubmit={values => this.signup(values)}
@@ -67,9 +68,23 @@ export default class Config extends Component {
             )}
           </Formik>
           </View>
+          </View>
         );
       } 
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  formik: {
+    padding: 10,
+  },
+  buttom: {
+    paddingTop: 20,
+    width: 10
+  }
+});
 
 Config.navigationOptions = {
     title: "Configuração",

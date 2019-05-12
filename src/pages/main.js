@@ -72,32 +72,20 @@ export default class Main extends Component {
         const { navigate } = this.props.navigation;
 
         return (
-            <View style={{flex:1}}> 
-                <Card
-                    imageStyle={{height:200, width:320}}
-                    image={require('../images/bandeira-portugal.jpg')}
-                    featuredTitle="Visto Português"
-                    featuredTitleStyle={style.title}
-                    featuredSubtitleStyle={style.subtitle}
-                    featuredSubtitle={this.getStatus()}
-                    >
-                </Card>
-
-                <Button
-                    icon={
-                        <Icon
-                        name="book" 
-                        size={15}
-                        color="white"
-                        />
-                        
-                    }
-                    containerStyle={{padding: 10}}
-                    iconRight
-                    title="Inserir visto "
-                    onPress={() => this.enterNewVisa()}
-                    />
-                    {this.renderOverlay()} 
+            <View style={style.container}>
+                <View> 
+                    <Card
+                        containerStyle={style.card}
+                        imageStyle={{height:200, width:320}}
+                        image={require('../images/bandeira-portugal.jpg')}
+                        featuredTitle="Visto Português"
+                        featuredTitleStyle={style.title}
+                        featuredSubtitleStyle={style.subtitle}
+                        featuredSubtitle={this.getStatus()}
+                        >
+                    </Card>
+                </View>
+                {this.renderOverlay()} 
             </View>
         );
 
@@ -111,6 +99,13 @@ Main.navigationOptions = {
 }
 
 const style = StyleSheet.create({
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        backgroundColor: '#065C6F',
+    },
+
     title: {
         alignSelf: 'flex-start',
         paddingLeft: 10,
@@ -120,5 +115,5 @@ const style = StyleSheet.create({
         alignSelf: 'flex-start',
         paddingLeft: 10,
         fontSize:20,
-    }
+    },
 })

@@ -76,6 +76,7 @@ export default class Config extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#1a73e8',
   },
   formik: {
     padding: 10,

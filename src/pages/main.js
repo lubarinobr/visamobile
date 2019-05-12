@@ -73,6 +73,9 @@ export default class Main extends Component {
 
         return (
             <View style={style.container}>
+                <View style={style.header}>
+                    <Text style={{fontFamily: 'Roboto-Regular', fontSize: 20, color: 'white'}}>Visa Mobile</Text>
+                </View>
                 <View> 
                     <Card
                         containerStyle={style.card}
@@ -101,15 +104,24 @@ Main.navigationOptions = {
 const style = StyleSheet.create({
     container: {
         flex: 1,
+        flexDirection: 'column', 
         alignItems: 'center',
         flexWrap: 'wrap',
-        backgroundColor: '#065C6F',
+        backgroundColor: '#1a73e8',
+        justifyContent: 'space-around'
+        
     },
-
+    header: { 
+        width: 200, 
+        height: 50,
+        justifyContent: 'center',
+        alignItems: 'center', 
+    },
     title: {
         alignSelf: 'flex-start',
         paddingLeft: 10,
-        fontSize:25
+        fontSize:25,
+        fontFamily: 'Roboto'
     },
     subtitle: {
         alignSelf: 'flex-start',

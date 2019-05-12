@@ -68,7 +68,7 @@ export default class Documents extends Component {
 const styles = StyleSheet.create({
    container: {
        flex: 1,
-       backgroundColor: '#227C90',
+       backgroundColor: '#1a73e8',
    } ,
 });
 

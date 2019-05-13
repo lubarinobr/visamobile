@@ -16,6 +16,7 @@ export default class Main extends Component {
 
     componentDidMount() {
         this.loadUser();
+        this.props.navigation.addListener('willFocus', this.loadUser)
     }
 
     componentWillUnmount() {

@@ -97,7 +97,7 @@ const style = StyleSheet.create({
         justifyContent: 'space-around'
         
     },
-    header: { 
+    header: {
         fontFamily: 'Roboto-Regular', 
         fontSize: 25, 
         color: 'white',
@@ -114,8 +114,8 @@ const style = StyleSheet.create({
         fontSize:20,
     },
     card: {
-        width: 250,
-        height: 250,
+        width: 320,
+        height: 300,
         backgroundColor: 'white',
         borderRadius: 4,
         alignItems: 'center',

@@ -62,7 +62,7 @@ export default class Config extends Component {
                 <Button
                   title='Logar'
                   disabled={!isValid}
-                  onPress={handleSubmit}
+                  onPress={handleSubmit} 
                 />
               </Fragment>
             )}
@@ -76,13 +76,12 @@ export default class Config extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1a73e8',
   },
   formik: {
     padding: 10,
+    paddingTop: 20,
   },
   buttom: {
-    paddingTop: 20,
     width: 10
   }
 });

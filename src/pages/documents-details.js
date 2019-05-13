@@ -34,23 +34,27 @@ export default class DocumentsDetail extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#1a73e8',
+        backgroundColor: 'white',
     },
     documentTitle: {
         fontFamily: 'Roboto-Black',
-        fontSize: 20,
+        fontSize: 25,
+        color: '#1a73e8'
     },
     documentDetail: {
         marginTop: 10,
         fontFamily: 'Roboto-Regular',
-        fontSize: 15,
+        fontSize: 20,
+        textAlign: 'justify'
     },
     card: {
         display: 'flex',
         margin: 20,
         backgroundColor: 'white',
         borderRadius: 4,
-        padding: 20
+        padding: 20,
+        borderColor: '#1a73e8',
+        borderWidth: 2,
     },
 });
 

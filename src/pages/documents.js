@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import api from '../services/api';
-import { CheckBox } from 'react-native-elements'
+import { CheckBox, Divider } from 'react-native-elements'
 import AsyncStorage from '@react-native-community/async-storage';
 
 export default class Documents extends Component {
@@ -48,11 +48,17 @@ export default class Documents extends Component {
     render() {
         return (
             <View style={styles.container}>
+
+                <View style={styles.welcomeView}>
+                    <Text style={styles.documentWelcomeTitle}>Aqui você pode marcar os documetos que já tem em mãos.</Text>
+                </View>
+                <Divider style={{backgroundColor: '#1a73e8', marginTop: 10}} />
                 <View style={styles.listDocument}>
                 {
                     this.state.checklist.map((check, i) => (
                         <CheckBox
                         key={i}
+                        textStyle={styles.checkboxTitle}
                         title={check.name}
                         checked={check.checked}
                         onPress={() => this.changeCheckListChecked(i)}
@@ -70,13 +76,23 @@ export default class Documents extends Component {
 const styles = StyleSheet.create({
    container: {
        flex: 1,
-       backgroundColor: '#1a73e8',
-       alignItems: 'center',
+       backgroundColor: 'white',
    } ,
+   welcomeView: {
+    margin: 10,
+    alignItems: 'center'
+   },
+   documentWelcomeTitle: {
+    fontFamily: 'Roboto-Black',
+    fontSize:20,
+    color: '#1a73e8'
+   },
    listDocument: {
-        width: 300,
         marginTop: 20,
    },
+   checkboxTitle: {
+       fontFamily: 'Roboto-Thin'
+   }
 });
 
 Documents.navigationOptions = {

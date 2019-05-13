@@ -42,15 +42,6 @@ export default class Main extends Component {
         }
     }
 
-    getStatus = () => {
-        return `Status: ${this.state.status}`;
-    }
-
-    enterNewVisa = () => {
-        console.log("Chamou overlay")
-        this.setState({isVisible: true});
-    }
-
     renderOverlay = () => {
         return (
             <View style={style.overlay}>
@@ -74,19 +65,14 @@ export default class Main extends Component {
         return (
             <View style={style.container}>
                 <View style={style.header}>
-                    <Text style={{fontFamily: 'Roboto-Regular', fontSize: 20, color: 'white'}}>Visa Mobile</Text>
+                    <Text style={style.header}>Visa Mobile</Text>
                 </View>
-                <View> 
-                    <Card
-                        containerStyle={style.card}
-                        imageStyle={{height:200, width:320}}
-                        image={require('../images/bandeira-portugal.jpg')}
-                        featuredTitle="Visto Português"
-                        featuredTitleStyle={style.title}
-                        featuredSubtitleStyle={style.subtitle}
-                        featuredSubtitle={this.getStatus()}
-                        >
-                    </Card>
+                <View style={style.card}>
+                    <Text style={style.cardTitle}>Visto Português</Text>
+                    <View style={style.cardStatus}>
+                        <Text style={style.cardTitleStatus}>Status:</Text>
+                        <Text style={style.cardDescriptionStatus}> {this.state.status}</Text>
+                    </View>
                 </View>
                 {this.renderOverlay()} 
             </View>
@@ -98,7 +84,7 @@ export default class Main extends Component {
 
 Main.navigationOptions = {
     title: "Home",
-    tabBarIcon: <Icon name="home" size={25} color="#999" />
+    tabBarIcon: <Icon name="home" size={25} color="#FFF" />
 }
 
 const style = StyleSheet.create({
@@ -112,15 +98,14 @@ const style = StyleSheet.create({
         
     },
     header: { 
-        width: 200, 
-        height: 50,
-        justifyContent: 'center',
-        alignItems: 'center', 
+        fontFamily: 'Roboto-Regular', 
+        fontSize: 25, 
+        color: 'white',
     },
     title: {
         alignSelf: 'flex-start',
         paddingLeft: 10,
-        fontSize:25,
+        fontSize:50,
         fontFamily: 'Roboto'
     },
     subtitle: {
@@ -128,4 +113,34 @@ const style = StyleSheet.create({
         paddingLeft: 10,
         fontSize:20,
     },
+    card: {
+        width: 250,
+        height: 250,
+        backgroundColor: 'white',
+        borderRadius: 4,
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        padding: 20,
+        flexDirection: 'row'
+    },
+    cardTitle: {
+        marginTop: 30,
+        fontFamily: 'Roboto',
+        fontSize: 25,
+    },
+    cardStatus: {
+        display: 'flex',
+        flexDirection: 'row',
+        marginTop: 20,
+    },
+    cardTitleStatus: {
+        fontFamily: 'Roboto',
+        fontSize: 20,
+    },
+    cardDescriptionStatus: {
+        fontFamily: 'Roboto',
+        fontSize: 20,
+        color: 'green'
+    }
+
 })

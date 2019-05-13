@@ -89,5 +89,5 @@ const styles = StyleSheet.create({
 
 Config.navigationOptions = {
     title: "Configuração",
-    tabBarIcon: <Icon name="tools" size={25} color="#999" />
+    tabBarIcon: <Icon name="tools" size={25} color="#FFF" />
 }

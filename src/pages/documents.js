@@ -48,6 +48,7 @@ export default class Documents extends Component {
     render() {
         return (
             <View style={styles.container}>
+                <View style={styles.listDocument}>
                 {
                     this.state.checklist.map((check, i) => (
                         <CheckBox
@@ -59,6 +60,7 @@ export default class Documents extends Component {
                         />
                     ))
                 }
+                </View>
             </View>
 
         );
@@ -69,10 +71,15 @@ const styles = StyleSheet.create({
    container: {
        flex: 1,
        backgroundColor: '#1a73e8',
+       alignItems: 'center',
    } ,
+   listDocument: {
+        width: 300,
+        marginTop: 20,
+   },
 });
 
 Documents.navigationOptions = {
     title: "Documentos",
-    tabBarIcon: <Icon name="file-document-box-outline" size={25} color="#999" />
+    tabBarIcon: <Icon name="file-document-box-outline" size={25} color="#FFF" />
 }

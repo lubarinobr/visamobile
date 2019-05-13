@@ -13,13 +13,13 @@ const app = createBottomTabNavigator({
         activeTintColor: "#FFF",
         activeBackgroundColor: "#1a73e8",
         inactiveBackgroundColor: "#1a73e8",
-        borderTopColor: 'transparent',
     },
-    borderTopColor: 'transparent'
 });
 
 const stackApp = createStackNavigator({
     DocumentsDetail
+}, {
+    headerMode: 'none'
 });
 
 const Routes = createAppContainer(

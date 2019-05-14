@@ -1,4 +1,4 @@
-import AsyncStorage  from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-community/async-storage';
 import firebase from 'react-native-firebase';
 import api from '../services/api';
 
@@ -18,7 +18,7 @@ export default class Notification {
         if(!fcmToken) {
             fcmToken = await firebase.messaging().getToken();
             if(fcmToken) {
-                let email = await AsyncStorage.getItem("email");
+                const { currentUser: {email} } = firebase.auth();
                 let user = {email, messageToken: fcmToken}
                 await api.put(`/users?email=${email}`, user);
                 await AsyncStorage.setItem('fcmToken', fcmToken);

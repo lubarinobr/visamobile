@@ -1,22 +1,20 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, ImageBackground } from 'react-native';
+import { View, StyleSheet, Text, ImageBackground, Button } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import api from '../services/api';
 import { Avatar } from 'react-native-elements';
 import Notification from '../services/notification';
-import AsyncStorage from '@react-native-community/async-storage';
+import firebase from 'react-native-firebase';
 
 export default class Main extends Component {
 
     state = {
-        name: "",
         status: "",
-        isVisible: false
+        currentUser: null,
     }
 
     componentDidMount() {
         this.loadUser();
-        this.props.navigation.addListener('willFocus', this.loadUser)
     }
 
     componentWillUnmount() {
@@ -28,18 +26,27 @@ export default class Main extends Component {
         new Notification().init();
     }
 
+    logout = async () => {
+        try {
+            await firebase.auth().signOut();
+            this.props.navigation.navigate('Loading');
+        }catch ( erro ) {
+            console.log(error.message);
+        }
+    }
+
     loadUser = async () => {
-        let email = await AsyncStorage.getItem("email");
-        if(!email) {
-            this.props.navigation.navigate("Config");
-        }else {
-            const resultUser = await api.get(`/visas/user?email=${email}`) 
+        try{
+            const { currentUser } = await firebase.auth();
+            const resultUser = await api.get(`/visas/user?email=${currentUser.email}`) 
             const {user: {name}, status } = resultUser.data;
             
-            this.setState({ name: name, status: status});
-
+            this.setState({ name, status, currentUser});
+    
             this.loadNotification();
 
+        }catch( error ) {
+            console.log(error);
         }
     }
 
@@ -70,6 +77,13 @@ export default class Main extends Component {
                     >
                     <Text style={style.optionsStatus}>Status: {this.state.status}</Text> 
                     </ImageBackground>
+                </View>
+
+                <View style={style.logouButtom}>
+                    <Button
+                        onPress={this.logout}
+                        title="Sair"
+                    />
                 </View>
             </View>
         );
@@ -131,57 +145,8 @@ const style = StyleSheet.create({
         width: 250,
         alignSelf: 'center',
     },
-
-
-
-
-
-
-
-    header: {
-        fontFamily: 'Roboto-Regular', 
-        fontSize: 25, 
-        color: 'white',
+    logouButtom: {
+        marginTop: 10,
+        alignItems: 'center'
     },
-    title: {
-        alignSelf: 'flex-start',
-        paddingLeft: 10,
-        fontSize:50,
-        fontFamily: 'Roboto'
-    },
-    subtitle: {
-        alignSelf: 'flex-start',
-        paddingLeft: 10,
-        fontSize:20,
-    },
-    card: {
-        width: 320,
-        height: 300,
-        backgroundColor: 'white',
-        borderRadius: 4,
-        alignItems: 'center',
-        flexWrap: 'wrap',
-        padding: 20,
-        flexDirection: 'row'
-    },
-    cardTitle: {
-        marginTop: 30,
-        fontFamily: 'Roboto',
-        fontSize: 25,
-    },
-    cardStatus: {
-        display: 'flex',
-        flexDirection: 'row',
-        marginTop: 20,
-    },
-    cardTitleStatus: {
-        fontFamily: 'Roboto',
-        fontSize: 20,
-    },
-    cardDescriptionStatus: {
-        fontFamily: 'Roboto',
-        fontSize: 20,
-        color: 'green'
-    }
-
 })

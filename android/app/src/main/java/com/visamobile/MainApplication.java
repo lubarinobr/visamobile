@@ -17,6 +17,7 @@ import java.util.List;
 import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;                       
 import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
 import io.invertase.firebase.RNFirebasePackage;
+import io.invertase.firebase.auth.RNFirebaseAuthPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -35,7 +36,8 @@ public class MainApplication extends Application implements ReactApplication {
             new RNFirebaseMessagingPackage(),
             new RNFirebaseNotificationsPackage(),
             new VectorIconsPackage(),
-            new RNGestureHandlerPackage()
+            new RNGestureHandlerPackage(),
+            new RNFirebaseAuthPackage()
       );
     }
 

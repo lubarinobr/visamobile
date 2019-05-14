@@ -3,12 +3,13 @@ import { View, StyleSheet, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import api from '../services/api';
 import { CheckBox, Divider } from 'react-native-elements'
-import AsyncStorage from '@react-native-community/async-storage';
+import firebase from 'react-native-firebase';
 
 export default class Documents extends Component {
 
     state = {
-        checklist: []
+        checklist: [],
+        currentUser: null,
     }
 
     componentDidMount() {
@@ -16,13 +17,8 @@ export default class Documents extends Component {
     }
 
     loadUserCheckList = async () => {
-        let email = await AsyncStorage.getItem("email");
-        if(!email) {
-            this.props.navigation.navigate("Config");
-        }
-
-        const result = await api.get(`/users?email=${email}`);
-        console.log(result);
+        const { currentUser } = firebase.auth();
+        const result = await api.get(`/users?email=${currentUser.email}`);
         const { checklist } = result.data;
 
         this.setState({checklist});

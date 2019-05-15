@@ -26,7 +26,12 @@ const stackApp = createStackNavigator({
 });
 
 const auth = createStackNavigator({
-    SignUp,
+    SignUp: {
+        screen: SignUp,
+        navigationOptions: {
+            header: null
+        }
+    },
     Login,
 });
 

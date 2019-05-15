@@ -11,15 +11,49 @@ export default class Main extends Component {
     state = {
         status: "",
         currentUser: null,
+        name: null,
     }
 
     componentDidMount() {
+        this.saveUser();
         this.loadUser();
+        this.loadNotification();
     }
 
     componentWillUnmount() {
         this.loadUser();
         this.loadNotification();
+    }
+    
+    loadUser = async () => {
+        try{
+            const { currentUser } = await firebase.auth();
+            if(this.state.name == null) {
+                this.setState({name: currentUser.displayName});
+            } 
+            // // const resultUser = await api.get(`/visas/user?email=${currentUser.email}`) 
+            // // const {user: {name}, status } = resultUser.data;
+            
+
+            // this.setState({ status, currentUser});
+    
+            this.loadNotification();
+
+        }catch( error ) {
+            console.log(error);
+        }
+    }
+
+    saveUser = async () => {
+        const {email, displayName} = await firebase.auth().currentUser;
+        try {
+            let response = await api.get(`/users?email=${email}`);
+            console.log(response);
+        } catch ( error ) {
+            let response = await api.post('/signup', {email, displayName});
+            console.log(response);
+        }
+        
     }
 
     loadNotification = async () => {
@@ -35,20 +69,6 @@ export default class Main extends Component {
         }
     }
 
-    loadUser = async () => {
-        try{
-            const { currentUser } = await firebase.auth();
-            const resultUser = await api.get(`/visas/user?email=${currentUser.email}`) 
-            const {user: {name}, status } = resultUser.data;
-            
-            this.setState({ name, status, currentUser});
-    
-            this.loadNotification();
-
-        }catch( error ) {
-            console.log(error);
-        }
-    }
 
     render() {
         const { navigate } = this.props.navigation;

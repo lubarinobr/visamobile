@@ -31,11 +31,12 @@ export default class Main extends Component {
             if(this.state.name == null) {
                 this.setState({name: currentUser.displayName});
             } 
-            // // const resultUser = await api.get(`/visas/user?email=${currentUser.email}`) 
-            // // const {user: {name}, status } = resultUser.data;
+            const resultUser = await api.get(`/users?email=${currentUser.email}`)
+            console.log(resultUser); 
+            const {name, visa: {status} } = resultUser.data;
             
 
-            // this.setState({ status, currentUser});
+            this.setState({ name, status, currentUser});
     
             this.loadNotification();
 
@@ -98,13 +99,6 @@ export default class Main extends Component {
                     <Text style={style.optionsStatus}>Status: {this.state.status}</Text> 
                     </ImageBackground>
                 </View>
-
-                <View style={style.logouButtom}>
-                    <Button
-                        onPress={this.logout}
-                        title="Sair"
-                    />
-                </View>
             </View>
         );
 
@@ -165,8 +159,5 @@ const style = StyleSheet.create({
         width: 250,
         alignSelf: 'center',
     },
-    logouButtom: {
-        marginTop: 10,
-        alignItems: 'center'
-    },
+    
 })

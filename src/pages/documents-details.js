@@ -11,6 +11,7 @@ export default class DocumentsDetail extends Component {
 
     componentDidMount() {
         const { navigation } = this.props;
+        console.log(navigation.getParam("name"));
         const name = navigation.getParam("name");
         const description = navigation.getParam("description");
 

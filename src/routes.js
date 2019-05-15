@@ -1,7 +1,6 @@
 import { createAppContainer , createBottomTabNavigator, createSwitchNavigator, createStackNavigator } from 'react-navigation';
 import Loading from './pages/loading';
 import SignUp from './pages/signup';
-import Login from './pages/login';
 import Main from './pages/main';
 import Documents from './pages/documents';
 import Config from './pages/config';
@@ -20,6 +19,7 @@ const app = createBottomTabNavigator({
 });
 
 const stackApp = createStackNavigator({
+    app,
     DocumentsDetail
 }, {
     headerMode: 'none'
@@ -32,7 +32,6 @@ const auth = createStackNavigator({
             header: null
         }
     },
-    Login,
 });
 
 const Routes = createAppContainer(

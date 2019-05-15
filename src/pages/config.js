@@ -1,7 +1,7 @@
 import React , { Component, Fragment } from 'react';
 import { View, Button, TextInput, Text, Alert, StyleSheet } from 'react-native';
+import { CheckBox } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { Formik } from 'formik';
 import api from '../services/api';
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -37,37 +37,29 @@ export default class Config extends Component {
     render() {
         return (
         <View style={styles.container}>
-          <View style={styles.formik}>
-          <Formik
-            initialValues={{ email: '' }}
-            onSubmit={values => this.signup(values)}
-            validationSchema={yup.object().shape({
-              email: yup
-                .string()
-                .email()
-                .required(),
-            })}
-          >
-            {({ values, handleChange, errors, setFieldTouched, touched, isValid, handleSubmit }) => (
-              <Fragment>
-                <TextInput
-                  value={values.email}
-                  onChangeText={handleChange('email')}
-                  onBlur={() => setFieldTouched('email')}
-                  placeholder="E-mail"
-                />
-                {touched.email && errors.email &&
-                  <Text style={{ fontSize: 10, color: 'red' }}>{errors.email}</Text>
-                }
-                <Button
-                  title='Logar'
-                  disabled={!isValid}
-                  onPress={handleSubmit} 
-                />
-              </Fragment>
-            )}
-          </Formik>
-          </View>
+            <Text style={styles.notificationTitle}>Receber notificações por: </Text>
+            <View style={styles.listDocument}>
+            
+              <CheckBox
+              textStyle={styles.checkboxTitle}
+              title='Email'
+              checked={true}
+                            />
+
+              <CheckBox
+              textStyle={styles.checkboxTitle}
+              title='Notificação'
+              checked={true}
+                            />              
+      
+            </View>
+
+            <View style={styles.logoutButtom}>
+                  <Button
+                      onPress={this.logout}
+                      title="Sair"
+                  />
+              </View>
           </View>
         );
       } 
@@ -76,14 +68,25 @@ export default class Config extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'white',
   },
-  formik: {
-    padding: 10,
-    paddingTop: 20,
+  logoutButtom: {
+    margin: 10,
   },
-  buttom: {
-    width: 10
-  }
+  checkboxTitle: {
+    fontFamily: 'Roboto-Thin'
+  },
+  listDocument: {
+    marginTop: 20,
+  },
+  notificationTitle: {
+    margin: 10,
+    fontFamily: 'Roboto-Black',
+    fontSize: 20,
+    alignSelf: 'center',
+    color: '#1a73e8',
+  },
+
 });
 
 Config.navigationOptions = {

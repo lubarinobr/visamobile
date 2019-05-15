@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import api from '../services/api';
 import { CheckBox, Divider } from 'react-native-elements'
@@ -18,10 +18,14 @@ export default class Documents extends Component {
 
     loadUserCheckList = async () => {
         const { currentUser } = firebase.auth();
-        const result = await api.get(`/users?email=${currentUser.email}`);
-        const { checklist } = result.data;
-
-        this.setState({checklist});
+        try {
+            const result = await api.get(`/users?email=${currentUser.email}`);
+            const { checklist } = result.data;
+    
+            this.setState({checklist});
+        }catch ( error ) {
+            Alert.alert("Aviso", "Você ainda não tem um visto cadastrado");
+        }
     }
 
     changeCheckListChecked = async (index) => {

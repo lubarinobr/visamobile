@@ -49,10 +49,8 @@ export default class Main extends Component {
         const {email, displayName} = await firebase.auth().currentUser;
         try {
             let response = await api.get(`/users?email=${email}`);
-            console.log(response);
         } catch ( error ) {
             let response = await api.post('/signup', {email, displayName});
-            console.log(response);
         }
         
     }

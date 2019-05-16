@@ -3,8 +3,6 @@ import { View, Button, TextInput, Text, Alert, StyleSheet } from 'react-native';
 import { CheckBox } from 'react-native-elements';
 import firebase from 'react-native-firebase';
 
-import * as yup from 'yup'
-
 export default class Config extends Component {
 
     logout = async () => {

@@ -12,6 +12,7 @@ export default class Main extends Component {
         status: "",
         currentUser: null,
         name: null,
+        userId: null,
     }
 
     componentDidMount() {
@@ -32,13 +33,22 @@ export default class Main extends Component {
                 this.setState({name: currentUser.displayName});
             } 
             const resultUser = await api.get(`/users?email=${currentUser.email}`)
-            console.log(resultUser); 
-            const {name, visa: {status} } = resultUser.data;
+             
+            const {id ,name } = resultUser.data;
             
+            let status = null;
 
-            this.setState({ name, status, currentUser});
+            if(resultUser.data.visa) {
+                status = resultUser.data.visa.status;
+            }
+
+            if(!resultUser.data.messageToken) {
+                this.loadNotification
+            }
+
+            this.setState({ userId: id, name, status, currentUser});
     
-            this.loadNotification();
+            this.loadNotification(true);
 
         }catch( error ) {
             console.log(error);
@@ -55,12 +65,13 @@ export default class Main extends Component {
         
     }
 
-    loadNotification = async () => {
-        new Notification().init();
+    loadNotification = async (isClear = false) => {
+        new Notification().init(isClear);
     }
 
-    openPage = (page) => {
-        this.props.navigation.navigate(page);
+    openPage = (page, param = {}) => {
+        console.log(param);
+        this.props.navigation.navigate(page, param);
     }
 
 
@@ -95,7 +106,7 @@ export default class Main extends Component {
 
                 <ScrollView horizontal={true} contentContainerStyle={style.menuContainer} showsHorizontalScrollIndicator={false}>
                     
-                    <TouchableOpacity onPress={() => this.openPage('Visa')}>
+                    <TouchableOpacity onPress={() => this.openPage('Visa', {userId: this.state.userId})}>
                     <View style={style.menu}>
                         <Icon name="assignment" size={24} color="#FFF" />
                         <Text style={style.menuText}>Novo visto</Text>
@@ -109,12 +120,12 @@ export default class Main extends Component {
                     </View>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={() => this.openPage('Tips')}> 
+                    {/* <TouchableOpacity onPress={() => this.openPage('Tips')}> 
                     <View style={style.menu}>
                         <Icon name="info" size={24} color="#FFF" />
                         <Text style={style.menuText}>Dicas</Text>
                     </View>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
 
                     <TouchableOpacity onPress={() => this.openPage('Config')}>
                     <View style={style.menu}>

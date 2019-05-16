@@ -1,20 +1,31 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, Alert } from 'react-native';
 import { Input , Divider, Button } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import api from '../services/api';
 
 export default class Visa extends Component {
 
     state = {
         username : null,
         password : null,
+        userId: null,
         usernameErrorMessage: '',
         passwordErrorMessage: '',
     }
 
-    submitVisa = () => {
+    componentDidMount() {
+        let userId = this.props.navigation.getParam('userId');
+        this.setState({userId});
+    }
+
+    componentWillUnmount() {
+        this.submitVisa();
+    }
+
+    submitVisa = async () => {
         this.setState({usernameErrorMessage: '', passwordErrorMessage: ''});
-        
+
         if(!this.state.username || !this.state.username.trim()) {
             this.setState({usernameErrorMessage: "Você precisa inserir o usuário"});
             return;
@@ -24,6 +35,10 @@ export default class Visa extends Component {
             this.setState({passwordErrorMessage: "Você precisa inserir a senha do usuário"});
             return;
         }
+        
+        await api.post(`/visas/user/${this.state.userId}`, {username : this.state.username, password: this.state.password});
+
+        this.props.navigation.navigate('Main');
     }
     
     render() {
@@ -57,7 +72,7 @@ export default class Visa extends Component {
                         shake={true}
                         errorStyle={{ color: 'red' }}
                         errorMessage={this.state.passwordErrorMessage}
-                        onChangeText={username => this.setState({username})}
+                        onChangeText={password => this.setState({password})}
                         rightIcon={
                             <Icon 
                                 name="lock"

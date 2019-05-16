@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, BackHandler } from 'react-native';
 import FirebaseLogin from '../FirebaseLogin';
-import firebase from 'react-native-firebase';
 
 
 export default class SignUp extends Component {

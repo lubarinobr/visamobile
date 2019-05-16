@@ -4,17 +4,22 @@ import api from '../services/api';
 
 export default class Notification {
 
-    async init() {
+    init = async (isClean = false) => {
         const enabled = await firebase.messaging().hasPermission();
         if(enabled) {
-            this.getToken();
+            this.getToken(isClean);
         }else {
             this.requestPermission();
         }
     }
 
-    async getToken() {
-        let fcmToken = await AsyncStorage.getItem('fcmToken');
+    getToken = async (isClean) => {
+        
+        let fcmToken = null;
+        if(!isClean) {
+            let fcmToken = await AsyncStorage.getItem('fcmToken');
+        }
+        
         if(!fcmToken) {
             fcmToken = await firebase.messaging().getToken();
             if(fcmToken) {
@@ -26,7 +31,7 @@ export default class Notification {
         }
     }
 
-    async requestPermission() {
+    requestPermission = async () => {
         try {
             await firebase.messaging().requestPermission();
 
@@ -34,5 +39,9 @@ export default class Notification {
         }catch( error ) {
             console.log(error);
         }
+    }
+
+    saveToken = async () => {
+        
     }
 }

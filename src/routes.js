@@ -5,6 +5,7 @@ import Main from './pages/main';
 import Documents from './pages/documents';
 import Config from './pages/config';
 import DocumentsDetail from './pages/documents-details';
+import Visa from './pages/visa';
 
 const app = createBottomTabNavigator({
     Main,
@@ -19,8 +20,11 @@ const app = createBottomTabNavigator({
 });
 
 const stackApp = createStackNavigator({
-    app,
-    DocumentsDetail
+    Main,
+    Documents,
+    Config,
+    Visa,
+    DocumentsDetail,
 }, {
     headerMode: 'none'
 });
@@ -38,7 +42,6 @@ const Routes = createAppContainer(
     createSwitchNavigator({
         Loading,
         auth,
-        app,
         stackApp
     }, {
         headerMode: 'none',

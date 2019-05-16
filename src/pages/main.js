@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, ImageBackground, Button } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { View, StyleSheet, Text, ImageBackground, Button, ScrollView , TouchableOpacity, Alert} from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import api from '../services/api';
 import { Avatar } from 'react-native-elements';
 import Notification from '../services/notification';
@@ -61,13 +61,8 @@ export default class Main extends Component {
         new Notification().init();
     }
 
-    logout = async () => {
-        try {
-            await firebase.auth().signOut();
-            this.props.navigation.navigate('Loading');
-        }catch ( erro ) {
-            console.log(error.message);
-        }
+    openPage = (page) => {
+        this.props.navigation.navigate(page);
     }
 
 
@@ -99,16 +94,42 @@ export default class Main extends Component {
                     <Text style={style.optionsStatus}>Status: {this.state.status}</Text> 
                     </ImageBackground>
                 </View>
+
+                <ScrollView horizontal={true} contentContainerStyle={style.menuContainer} showsHorizontalScrollIndicator={false}>
+                    
+                    <TouchableOpacity onPress={() => this.openPage('Visa')}>
+                    <View style={style.menu}>
+                        <Icon name="assignment" size={24} color="#FFF" />
+                        <Text style={style.menuText}>Novo visto</Text>
+                    </View>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={() => this.openPage('Documents')}>
+                    <View style={style.menu}>
+                        <Icon name="book" size={24} color="#FFF" />
+                        <Text style={style.menuText}>Meus Documentos</Text>
+                    </View>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={() => this.openPage('Tips')}> 
+                    <View style={style.menu}>
+                        <Icon name="info" size={24} color="#FFF" />
+                        <Text style={style.menuText}>Dicas</Text>
+                    </View>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={() => this.openPage('Config')}>
+                    <View style={style.menu}>
+                        <Icon name="settings" size={24} color="#FFF" />
+                        <Text style={style.menuText}>Configurações</Text>
+                    </View>
+                    </TouchableOpacity>
+                </ScrollView>
             </View>
         );
 
     }
 
-}
-
-Main.navigationOptions = {
-    title: "Home",
-    tabBarIcon: <Icon name="home" size={25} color="#FFF" />
 }
 
 const style = StyleSheet.create({
@@ -138,9 +159,9 @@ const style = StyleSheet.create({
         
     },
     options: {
-        alignSelf: 'center',
         marginTop: 30,
-        width: 250,
+        marginLeft: 20,
+        marginRight: 20,
         height: 250,
     },
     optionsStatus: {
@@ -158,6 +179,24 @@ const style = StyleSheet.create({
         borderWidth: 2,
         width: 250,
         alignSelf: 'center',
+    },
+    menuContainer: {
+        paddingLeft: 10, 
+        paddingRight: 20,
+        paddingTop: 20
+    },
+    menu: {
+        width: 100,
+        height: 100,
+        backgroundColor: '#1a73e8',
+        borderRadius: 8,
+        marginLeft: 10,
+        padding: 10,
+        justifyContent: 'space-between',
+    },
+    menuText: {
+        fontSize: 13,
+        color: '#FFF',
     },
     
 })

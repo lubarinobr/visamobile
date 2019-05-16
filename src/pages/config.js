@@ -1,36 +1,18 @@
 import React , { Component, Fragment } from 'react';
 import { View, Button, TextInput, Text, Alert, StyleSheet } from 'react-native';
 import { CheckBox } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome5';
-import api from '../services/api';
-import AsyncStorage from '@react-native-community/async-storage';
+import firebase from 'react-native-firebase';
 
 import * as yup from 'yup'
 
 export default class Config extends Component {
 
-    signup = async (value) => {
-        const { email } = value;
-
-        try {
-          await api.get(`/users?email=${email}`);
-          await AsyncStorage.setItem("email", email);
-          this.props.navigation.navigate('Home');
-        }catch ( error ) {
-          console.log(error);
-          Alert.alert("Usuário não encontrado");
-        }
-    }
-
-    componentDidMount() {
-      this.getEmail();
-    }
-
-    getEmail = async () => {
-      const email = await AsyncStorage.getItem("email");
-
-      if(email) {
-        this.props.navigation.navigate('Home');
+    logout = async () => {
+      try {
+          await firebase.auth().signOut();
+          this.props.navigation.navigate('Loading');
+      }catch ( erro ) {
+          console.log(error.message);
       }
     }
 
@@ -88,8 +70,3 @@ const styles = StyleSheet.create({
   },
 
 });
-
-Config.navigationOptions = {
-    title: "Configuração",
-    tabBarIcon: <Icon name="tools" size={25} color="#FFF" />
-}

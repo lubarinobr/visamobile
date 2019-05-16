@@ -7,7 +7,7 @@ export default class SignUp extends Component {
     
     render() {
         return(
-            <FirebaseLogin login={user => console.log('')}/>
+            <FirebaseLogin login={user => console.log('')}/> 
         )
     }
 }

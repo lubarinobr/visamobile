@@ -6,6 +6,7 @@ import Documents from './pages/documents';
 import Config from './pages/config';
 import DocumentsDetail from './pages/documents-details';
 import Visa from './pages/visa';
+import VisaEdit from './pages/visa-edit';
 
 const app = createBottomTabNavigator({
     Main,
@@ -25,6 +26,7 @@ const stackApp = createStackNavigator({
     Config,
     Visa,
     DocumentsDetail,
+    VisaEdit,
 }, {
     headerMode: 'none'
 });

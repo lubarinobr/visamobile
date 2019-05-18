@@ -9,10 +9,14 @@ import firebase from 'react-native-firebase';
 export default class Main extends Component {
 
     state = {
-        status: "",
+        status: "", 
         currentUser: null,
         name: null,
         userId: null,
+        username: "",
+        password: "",
+        visaId: "",
+
     }
 
     componentDidMount() {
@@ -34,19 +38,20 @@ export default class Main extends Component {
             } 
             const resultUser = await api.get(`/users?email=${currentUser.email}`)
              
-            const {id ,name } = resultUser.data;
+            const {id ,name, visa: {username, password} } = resultUser.data;
             
             let status = null;
 
             if(resultUser.data.visa) {
                 status = resultUser.data.visa.status;
+                this.setState({status});
             }
 
             if(!resultUser.data.messageToken) {
                 this.loadNotification
             }
-
-            this.setState({ userId: id, name, status, currentUser});
+            
+            this.setState({ userId: id, name, currentUser, username, password, visaId});
     
             this.loadNotification(true);
 
@@ -91,11 +96,11 @@ export default class Main extends Component {
                 </View>
                 <View style={style.welcome}>
                     <Text style={style.welcomeTitle}>Veja abaixo como anda o status do seu visto.</Text>
-                </View>
+                </View> 
                 <View style={style.options}>
                     <ImageBackground
                         borderRadius={8}
-                        resizeMethod='auto'
+                        resizeMethod='auto' 
                         imageStyle={{opacity: 0.8}}
                         source={require('../images/bandeira-portugal.jpg')}
                         style={{width: '100%', height:'100%'}}
@@ -106,10 +111,17 @@ export default class Main extends Component {
 
                 <ScrollView horizontal={true} contentContainerStyle={style.menuContainer} showsHorizontalScrollIndicator={false}>
                     
-                    <TouchableOpacity onPress={() => this.openPage('Visa', {userId: this.state.userId})}>
+                    {/* <TouchableOpacity onPress={() => this.openPage('VisaEdit', {userId: this.state.userId})}>
                     <View style={style.menu}>
                         <Icon name="assignment" size={24} color="#FFF" />
                         <Text style={style.menuText}>Novo visto</Text>
+                    </View>
+                    </TouchableOpacity> */}
+
+                    <TouchableOpacity onPress={() => this.openPage('VisaEdit', {userId: this.state.userId, username: this.state.username, password: this.state.password})}>
+                    <View style={style.menu}>
+                        <Icon name="assignment" size={24} color="#FFF" />
+                        <Text style={style.menuText}>Editar visto</Text>
                     </View>
                     </TouchableOpacity>
 
@@ -120,12 +132,12 @@ export default class Main extends Component {
                     </View>
                     </TouchableOpacity>
 
-                    {/* <TouchableOpacity onPress={() => this.openPage('Tips')}> 
+                    { <TouchableOpacity onPress={() => this.openPage('Tips')}> 
                     <View style={style.menu}>
                         <Icon name="info" size={24} color="#FFF" />
                         <Text style={style.menuText}>Dicas</Text>
                     </View>
-                    </TouchableOpacity> */}
+                    </TouchableOpacity> }
 
                     <TouchableOpacity onPress={() => this.openPage('Config')}>
                     <View style={style.menu}>

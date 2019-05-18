@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, Alert } from 'react-native';
-import { Input , Divider, Button } from 'react-native-elements'
+import { Input , Divider, Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import api from '../services/api';
 

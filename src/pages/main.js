@@ -37,21 +37,20 @@ export default class Main extends Component {
                 this.setState({name: currentUser.displayName});
             } 
             const resultUser = await api.get(`/users?email=${currentUser.email}`)
-             
-            const {id ,name, visa: {username, password} } = resultUser.data;
+            console.log(resultUser);
+            const {id ,name } = resultUser.data;
             
-            let status = null;
-
             if(resultUser.data.visa) {
-                status = resultUser.data.visa.status;
-                this.setState({status});
+                const {visa: {id, username, password, status}} = resultUser.data;
+
+                this.setState({visaId: id, username, password, status});
             }
 
             if(!resultUser.data.messageToken) {
                 this.loadNotification
             }
             
-            this.setState({ userId: id, name, currentUser, username, password, visaId});
+            this.setState({ userId: id, name, currentUser});
     
             this.loadNotification(true);
 
@@ -111,14 +110,14 @@ export default class Main extends Component {
 
                 <ScrollView horizontal={true} contentContainerStyle={style.menuContainer} showsHorizontalScrollIndicator={false}>
                     
-                    {/* <TouchableOpacity onPress={() => this.openPage('VisaEdit', {userId: this.state.userId})}>
+                    <TouchableOpacity onPress={() => this.openPage('Visa', {userId: this.state.userId})}>
                     <View style={style.menu}>
                         <Icon name="assignment" size={24} color="#FFF" />
                         <Text style={style.menuText}>Novo visto</Text>
                     </View>
-                    </TouchableOpacity> */}
+                    </TouchableOpacity>
 
-                    <TouchableOpacity onPress={() => this.openPage('VisaEdit', {userId: this.state.userId, username: this.state.username, password: this.state.password})}>
+                    <TouchableOpacity onPress={() => this.openPage('VisaEdit', {userId: this.state.userId, username: this.state.username, password: this.state.password, visaId: this.state.visaId})}>
                     <View style={style.menu}>
                         <Icon name="assignment" size={24} color="#FFF" />
                         <Text style={style.menuText}>Editar visto</Text>

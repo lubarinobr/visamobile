@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, Alert } from 'react-native';
+import { View, StyleSheet, Text, ActivityIndicator, Modal } from 'react-native';
 import { Input , Divider, Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import api from '../services/api';
@@ -13,15 +13,14 @@ export default class VisaEdit extends Component {
         usernameErrorMessage: '',
         passwordErrorMessage: '',
         visaId: null,
+        loading: false,
     }
 
     componentDidMount() {
         let userId = this.props.navigation.getParam('userId');
         let username = this.props.navigation.getParam('username');
         let password = this.props.navigation.getParam('password');
-        let visaId = this.props.navigation.getParam('visaId');
-        password = password ? password : 'Test';
-        visaId = visaId ? visaId : 'Test';
+        let visaId = this.props.navigation.getParam('visaId');  
         this.setState({userId, username, password, visaId});
     }
 
@@ -45,7 +44,10 @@ export default class VisaEdit extends Component {
     }
 
     deleteVisa = async () => {
-        await api.delete('/visas/user');
+        this.setState({loading: true});
+        await api.delete(`/visas/${this.state.userId}`);
+        this.setState({loading: false});
+        this.props.navigation.navigate('Main');
     }
 
     render(){

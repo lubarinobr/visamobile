@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, Text, ActivityIndicator, Alert } from 'react-native';
 import { Input , Divider, Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import api from '../services/api';
+import Loader from '../components/loader';
 
 export default class VisaEdit extends Component {
 
@@ -14,6 +15,8 @@ export default class VisaEdit extends Component {
         passwordErrorMessage: '',
         visaId: null,
         isLogin: false,
+        loading: false,
+        security: true,
     }
 
     componentDidMount() {
@@ -26,40 +29,48 @@ export default class VisaEdit extends Component {
 
     editVisa = async () => {
 
-        this.setState({usernameErrorMessage: '', passwordErrorMessage: '', isLogin: true});
+        this.setState({usernameErrorMessage: '', passwordErrorMessage: '', loading: true, security: true});
 
         if(!this.state.username || !this.state.username.trim()) {
             this.setState({usernameErrorMessage: "Você precisa inserir o usuário"});
-            this.setState({isLogin: false});
+            this.setState({loading: false});
             return;
         }
 
         if(!this.state.password) {
             this.setState({passwordErrorMessage: "Você precisa inserir a senha do usuário"});
-            this.setState({isLogin: false});
+            this.setState({loading: false});
             return;
         }
         
-        await api.put(`/visas/${this.state.visaId}`, {username : this.state.username, password: this.state.password});
+        try{
+            await api.put(`/visas/${this.state.visaId}`, {username : this.state.username, password: this.state.password});
+        }catch(error) {
+            console.log(error);
+        }
 
-        this.props.navigation.navigate('Main');
+        this.setState({loading: false});
+        Alert.alert("Sucesso", "Seu visto foi atualizado com sucesso");
     }
 
     deleteVisa = async () => {
+        this.setState({loading: true});
         try{
             this.setState({isLogin: true});
             await api.delete(`/visas/${this.state.visaId}`);
             this.props.navigation.navigate('Main');
             
         }catch(error) { 
-            this.setState({isLogin: false});
+            console.log(error);
         };
+
+        this.setState({loading: false});
     }
 
     render(){
         return (
             <View style={styles.container}>
-
+                <Loader loading={this.state.loading} />
                 <View style={styles.welcomeView}>
                     <Text style={styles.visaWelcomeTitle}>Edite os dados de acesso do seu visto aqui.</Text>
                 </View>
@@ -85,7 +96,7 @@ export default class VisaEdit extends Component {
                         autoCapitalize="none"
                         defaultValue={this.state.password}
                         placeholder="senha"
-                        secureTextEntry={true}
+                        secureTextEntry={this.state.security}
                         shake={true}
                         errorStyle={{ color: 'red' }}
                         errorMessage={this.state.passwordErrorMessage}
@@ -94,6 +105,7 @@ export default class VisaEdit extends Component {
                             <Icon 
                                 name="lock"
                                 size={24}
+                                onPress={() => this.setState({security: !this.state.security})}
                             />
                         }
                     />

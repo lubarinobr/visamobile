@@ -3,6 +3,7 @@ import { View, StyleSheet, Text, Alert } from 'react-native';
 import { Input , Divider, Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import api from '../services/api';
+import Loader from '../components/loader';
 
 export default class Visa extends Component {
 
@@ -12,6 +13,8 @@ export default class Visa extends Component {
         userId: null,
         usernameErrorMessage: '',
         passwordErrorMessage: '',
+        loading: false,
+        security: true,
     }
 
     componentDidMount() {
@@ -20,7 +23,7 @@ export default class Visa extends Component {
     }
 
     submitVisa = async () => {
-        this.setState({usernameErrorMessage: '', passwordErrorMessage: ''});
+        this.setState({usernameErrorMessage: '', passwordErrorMessage: '', loading: true, security: true});
 
         if(!this.state.username || !this.state.username.trim()) {
             this.setState({usernameErrorMessage: "Você precisa inserir o usuário"});
@@ -39,12 +42,14 @@ export default class Visa extends Component {
             Alert.alert("Aviso", "Ocorreu um erro ao tentar salvar o seu visto, tente novamente");
         }
 
+        this.setState({loading: false});
+
     }
     
     render() {
         return (
             <View style={styles.container}>
-
+                <Loader loading={this.state.loading} />
                 <View style={styles.welcomeView}>
                     <Text style={styles.visaWelcomeTitle}>Insira os dados de acesso do seu visto aqui.</Text>
                 </View>
@@ -68,7 +73,7 @@ export default class Visa extends Component {
                     <Input 
                         autoCapitalize="none"
                         placeholder="senha"
-                        secureTextEntry={true}
+                        secureTextEntry={this.state.security}
                         shake={true}
                         errorStyle={{ color: 'red' }}
                         errorMessage={this.state.passwordErrorMessage}
@@ -77,6 +82,7 @@ export default class Visa extends Component {
                             <Icon 
                                 name="lock"
                                 size={24}
+                                onPress={() => this.setState({security: !this.state.security})}
                             />
                         }
                     />

@@ -5,6 +5,7 @@ import api from '../services/api';
 import { Avatar } from 'react-native-elements';
 import Notification from '../services/notification';
 import firebase from 'react-native-firebase';
+import Loader from '../components/loader'
 
 
 export default class Main extends Component {
@@ -17,6 +18,7 @@ export default class Main extends Component {
         username: "",
         password: "",
         visaId: "",
+        loading: false,
 
     }
 
@@ -36,6 +38,7 @@ export default class Main extends Component {
     }
     
     loadUser = async () => {
+        this.setState({loading: true, status: '', visaId: ""});
         try{
             const { currentUser } = await firebase.auth();
             if(this.state.name == null) {
@@ -51,7 +54,7 @@ export default class Main extends Component {
             }
 
             if(!resultUser.data.messageToken) {
-                this.loadNotification
+                this.loadNotification();
             }
             
             this.setState({ userId: id, name, currentUser});
@@ -61,6 +64,8 @@ export default class Main extends Component {
         }catch( error ) {
             console.log(error);
         }
+
+        this.setState({loading: false});
     }
 
     loadNotification = async (isClear = false) => {
@@ -71,12 +76,15 @@ export default class Main extends Component {
         this.props.navigation.navigate(page, param);
     }
 
+    isDisable = () => {
+        return !this.state.visaId;
+    }
 
     render() {
-        const { navigate } = this.props.navigation;
-
         return (
             <View style={style.container}>
+                <Loader
+                    loading={this.state.loading} />
                 <View style={style.profile}>
                     <Avatar
                         rounded
@@ -120,23 +128,20 @@ export default class Main extends Component {
                         </View>
                         </TouchableOpacity>
                     }
-                    
 
-                    
-
-                    <TouchableOpacity onPress={() => this.openPage('Documents')}>
+                    <TouchableOpacity onPress={() => this.openPage('Documents')} disabled={this.isDisable()}>
                     <View style={style.menu}>
                         <Icon name="book" size={24} color="#FFF" />
                         <Text style={style.menuText}>Meus Documentos</Text>
                     </View>
                     </TouchableOpacity>
 
-                    { <TouchableOpacity onPress={() => this.openPage('Tips')}> 
+                    <TouchableOpacity onPress={() => Alert.alert("Em construção", "Em breve você terá diversas dicas.")}> 
                     <View style={style.menu}>
                         <Icon name="info" size={24} color="#FFF" />
                         <Text style={style.menuText}>Dicas</Text>
                     </View>
-                    </TouchableOpacity> }
+                    </TouchableOpacity>
 
                     <TouchableOpacity onPress={() => this.openPage('Config')}>
                     <View style={style.menu}>

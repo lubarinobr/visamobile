@@ -1,20 +1,41 @@
 //import liraries
 import React, { Component } from 'react';
-import { View, StyleSheet,KeyboardAvoidingView, StatusBar, TextInput, TouchableOpacity, Text } from 'react-native';
+import { View, StyleSheet,KeyboardAvoidingView, StatusBar, TextInput, TouchableOpacity, Text,Alert, ActivityIndicator } from 'react-native';
 import firebase from 'react-native-firebase';
 // create a component
 class Login extends Component {
 
 
-    state = {email: '', password: '', errorMessage: ''}
+    state = {email: '', password: '', errorMessage: '', isLogin: false}
 
     login = () => {
-    
+        this.setState({isLogin: true});
+
+        if(!this.state.email || !this.state.password) {
+            Alert.alert("Você precisa informar todos os campos");
+            this.setState({isLogin: false});
+            return;
+        }
+
         firebase
-      .auth()
-      .signInWithEmailAndPassword(this.state.email, this.state.password)
-      .then(() => this.props.navigation.navigate('Main'))
-      .catch(error => this.setState({ errorMessage: error.message }));
+            .auth()
+            .signInWithEmailAndPassword(this.state.email, this.state.password)
+            .then(() => this.props.navigation.navigate('Main'))
+            .catch(error => {
+                switch (error.code) {
+                case 'auth/invalid-email':
+                    Alert.alert('Aviso', 'Email inválido.');
+                    break;
+                case 'auth/user-not-found':
+                case 'auth/wrong-password':
+                    Alert.alert('Aviso', 'Email ou senha incorreto(s)');
+                    break;
+                default:
+                    Alert.alert('Aviso', 'Verifique a sua conexão com a internet');
+                }
+
+                this.setState({isLogin: false});
+            });
     }
 
     render() {
@@ -41,7 +62,9 @@ class Login extends Component {
                                 secureTextEntry/>
 
                     <TouchableOpacity style={styles.buttonContainer} onPress={this.login}>
-                        <Text  style={styles.buttonText}>Login</Text>
+                    {this.state.isLogin
+                        ? <ActivityIndicator size="large" style={styles.spinner} color='white' />
+                        : <Text style={styles.buttonText}>Login</Text>}
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.buttonContainer} onPress={() => this.props.navigation.navigate('Signup')}>
@@ -101,7 +124,10 @@ const styles = StyleSheet.create({
     },
     formContainer: {
         padding: 20
-    }
+    },
+    spinner: {
+        height: 10,
+    },
 });
 
 //make this component available to the app

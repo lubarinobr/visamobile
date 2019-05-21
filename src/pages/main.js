@@ -6,6 +6,7 @@ import { Avatar } from 'react-native-elements';
 import Notification from '../services/notification';
 import firebase from 'react-native-firebase';
 
+
 export default class Main extends Component {
 
     state = {
@@ -19,15 +20,19 @@ export default class Main extends Component {
 
     }
 
+    didBlur = this.props.navigation.addListener(
+        'didFocus',
+        payload => {
+            this.loadUser();
+        }
+    );
+
     componentDidMount() {
-        this.saveUser();
-        this.loadUser();
         this.loadNotification();
     }
 
     componentWillUnmount() {
-        this.loadUser();
-        this.loadNotification();
+        didBlur.remove();
     }
     
     loadUser = async () => {
@@ -37,7 +42,6 @@ export default class Main extends Component {
                 this.setState({name: currentUser.displayName});
             } 
             const resultUser = await api.get(`/users?email=${currentUser.email}`)
-            console.log(resultUser);
             const {id ,name } = resultUser.data;
             
             if(resultUser.data.visa) {
@@ -59,22 +63,11 @@ export default class Main extends Component {
         }
     }
 
-    saveUser = async () => {
-        const {email, displayName} = await firebase.auth().currentUser;
-        try {
-            let response = await api.get(`/users?email=${email}`);
-        } catch ( error ) {
-            let response = await api.post('/signup', {email, displayName});
-        }
-        
-    }
-
     loadNotification = async (isClear = false) => {
         new Notification().init(isClear);
     }
 
     openPage = (page, param = {}) => {
-        console.log(param);
         this.props.navigation.navigate(page, param);
     }
 
@@ -110,19 +103,26 @@ export default class Main extends Component {
 
                 <ScrollView horizontal={true} contentContainerStyle={style.menuContainer} showsHorizontalScrollIndicator={false}>
                     
-                    <TouchableOpacity onPress={() => this.openPage('Visa', {userId: this.state.userId})}>
-                    <View style={style.menu}>
-                        <Icon name="assignment" size={24} color="#FFF" />
-                        <Text style={style.menuText}>Novo visto</Text>
-                    </View>
-                    </TouchableOpacity>
+                    {this.state.visaId
+                        ? <TouchableOpacity onPress={() => this.openPage('VisaEdit', {userId: this.state.userId, username: this.state.username, password: this.state.password, visaId: this.state.visaId})}>
+                        <View style={style.menu}>
+                            <Icon name="assignment" size={24} color="#FFF" />
+                            <Text style={style.menuText}>Editar visto</Text>
+                        </View>
+                        </TouchableOpacity>
 
-                    <TouchableOpacity onPress={() => this.openPage('VisaEdit', {userId: this.state.userId, username: this.state.username, password: this.state.password, visaId: this.state.visaId})}>
-                    <View style={style.menu}>
-                        <Icon name="assignment" size={24} color="#FFF" />
-                        <Text style={style.menuText}>Editar visto</Text>
-                    </View>
-                    </TouchableOpacity>
+                        :
+                        
+                        <TouchableOpacity onPress={() => this.openPage('Visa', {userId: this.state.userId})}>
+                        <View style={style.menu}>
+                            <Icon name="assignment" size={24} color="#FFF" />
+                            <Text style={style.menuText}>Novo visto</Text>
+                        </View>
+                        </TouchableOpacity>
+                    }
+                    
+
+                    
 
                     <TouchableOpacity onPress={() => this.openPage('Documents')}>
                     <View style={style.menu}>

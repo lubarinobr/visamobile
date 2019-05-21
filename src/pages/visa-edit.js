@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, ActivityIndicator, Modal } from 'react-native';
+import { View, StyleSheet, Text, ActivityIndicator } from 'react-native';
 import { Input , Divider, Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import api from '../services/api';
@@ -13,7 +13,7 @@ export default class VisaEdit extends Component {
         usernameErrorMessage: '',
         passwordErrorMessage: '',
         visaId: null,
-        loading: false,
+        isLogin: false,
     }
 
     componentDidMount() {
@@ -24,30 +24,36 @@ export default class VisaEdit extends Component {
         this.setState({userId, username, password, visaId});
     }
 
-    submitVisa = async () => {
+    editVisa = async () => {
 
-        this.setState({usernameErrorMessage: '', passwordErrorMessage: ''});
+        this.setState({usernameErrorMessage: '', passwordErrorMessage: '', isLogin: true});
 
         if(!this.state.username || !this.state.username.trim()) {
             this.setState({usernameErrorMessage: "Você precisa inserir o usuário"});
+            this.setState({isLogin: false});
             return;
         }
 
         if(!this.state.password) {
             this.setState({passwordErrorMessage: "Você precisa inserir a senha do usuário"});
+            this.setState({isLogin: false});
             return;
         }
         
-        await api.put(`/visas/user/${this.state.userId}`, {username : this.state.username, password: this.state.password});
+        await api.put(`/visas/${this.state.visaId}`, {username : this.state.username, password: this.state.password});
 
         this.props.navigation.navigate('Main');
     }
 
     deleteVisa = async () => {
-        this.setState({loading: true});
-        await api.delete(`/visas/${this.state.userId}`);
-        this.setState({loading: false});
-        this.props.navigation.navigate('Main');
+        try{
+            this.setState({isLogin: true});
+            await api.delete(`/visas/${this.state.visaId}`);
+            this.props.navigation.navigate('Main');
+            
+        }catch(error) { 
+            this.setState({isLogin: false});
+        };
     }
 
     render(){
@@ -97,7 +103,7 @@ export default class VisaEdit extends Component {
                             containerStyle={{ width: 150}}
                             title="Salvar"
                             iconRight
-                            onPress={() => this.submitVisa()}
+                            onPress={() => this.editVisa()}
                             icon={
                                 <Icon 
                                     name="check-circle"
@@ -106,12 +112,13 @@ export default class VisaEdit extends Component {
                                 />
                             }
                         />
+                        <ActivityIndicator size="large" style={styles.spinner} color='red' animating={this.state.isLogin} hidesWhenStopped={false} />
                         <Button 
                             containerStyle={{width: 150}}
                             buttonStyle={{backgroundColor: '#FB6567'}}
-                            title="Excluir"
+                            title= "Excluir"
                             iconRight
-                            onPress={() => this.submitVisa()}
+                            onPress={() => this.deleteVisa()}
                             icon={
                                 <Icon 
                                     name="check-circle"
@@ -145,6 +152,9 @@ const styles = StyleSheet.create({
          marginTop: 20,
     },
     checkboxTitle: {
-        fontFamily: 'Roboto-Thin'
-    }
+        fontFamily: 'Roboto-Thin',
+    },
+    spinner: {
+        height: 10,
+    },
  });

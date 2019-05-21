@@ -1,30 +1,46 @@
 import React, { Component } from 'react';
-import { StyleSheet, KeyboardAvoidingView, Text, TextInput, StatusBar, TouchableOpacity, View, Alert } from 'react-native';
+import { StyleSheet, KeyboardAvoidingView, Text, TextInput, StatusBar, TouchableOpacity, View, Alert, ActivityIndicator } from 'react-native';
 import firebase from 'react-native-firebase';
 
 export default class Signup extends Component {
 
-    state = {name: '', email: '', password: '', confirmPassword: ''}
+    state = {name: '', email: '', password: '', confirmPassword: '', isLogin: false}
 
     singup = () => {
 
-      console.log(this.state);
-        
-        if(!this.state.name || !this.state.email || !this.state.password || !this.state.confirmPassword) {
-            Alert.alert("Você precisa preencher todos os campos");
-            return;
-        } 
+      this.setState({isLogin: true});  
+      if(!this.state.name || !this.state.email || !this.state.password || !this.state.confirmPassword) {
+          Alert.alert("Você precisa preencher todos os campos");
+          this.setState({isLogin: false});
+          return;
+      } 
 
-        if(this.state.password != this.state.confirmPassword) {
-            Alert.alert("As senha não são iguais");
-            return ;
-        }
+      if(this.state.password != this.state.confirmPassword) {
+          Alert.alert("As senha não são iguais");
+          this.setState({isLogin: false});
+          return ;
+      }
 
-        firebase
-            .auth()
-            .createUserWithEmailAndPassword(this.state.email, this.state.password)
-            .then(() => this.props.navigation.navigate('Main'))
-            .catch(error => this.setState({ errorMessage: error.message }))
+      firebase
+          .auth()
+          .createUserWithEmailAndPassword(this.state.email, this.state.password)
+          .then(() => this.props.navigation.navigate('Main'))
+          .catch(error => {
+            switch (error.code) {
+              case 'auth/email-already-in-use':
+                Alert.alert('Aviso', 'Este email já está em uso');
+                break;
+              case 'auth/invalid-email':
+                Alert.alert('Aviso', 'O formato do email é invalido');
+                break;
+              case 'auth/weak-password':
+                Alert.alert('Aviso', 'A senha é muito fraca');
+                break;
+              default:
+                Alert.alert('Aviso', 'Verifique sua conexão com a internet');
+            }
+            this.setState({ isLogin: false });
+          })
     }
     
     render() {
@@ -66,7 +82,10 @@ export default class Signup extends Component {
                            secureTextEntry/>           
                  {/*   <Button onPress={onButtonPress} title = 'Login' style={styles.loginButton} /> */}
               <TouchableOpacity style={styles.buttonContainer} onPress={this.singup}>
-                    <Text  style={styles.buttonText}>Cadastrar</Text>
+                  {this.state.isLogin
+                        ? <ActivityIndicator size="large" style={styles.spinner} color='white' />
+                        : <Text style={styles.buttonText}>Cadastrar</Text>}
+                    
                 </TouchableOpacity> 
             </View>
             
@@ -112,5 +131,8 @@ const styles = StyleSheet.create({
     loginButton:{
       backgroundColor:  '#2980b6',
       color: '#fff'
+    },
+    spinner: {
+      height: 10,
     },
   })

@@ -19,10 +19,6 @@ export default class Visa extends Component {
         this.setState({userId});
     }
 
-    componentWillUnmount() {
-        this.submitVisa();
-    }
-
     submitVisa = async () => {
         this.setState({usernameErrorMessage: '', passwordErrorMessage: ''});
 
@@ -36,9 +32,13 @@ export default class Visa extends Component {
             return;
         }
         
-        await api.post(`/visas/user/${this.state.userId}`, {username : this.state.username, password: this.state.password});
+        try{
+            await api.post(`visas/user/${this.state.userId}`, {username : this.state.username, password: this.state.password});
+            this.props.navigation.navigate('Main');
+        }catch(error) {
+            Alert.alert("Aviso", "Ocorreu um erro ao tentar salvar o seu visto, tente novamente");
+        }
 
-        this.props.navigation.navigate('Main');
     }
     
     render() {

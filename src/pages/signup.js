@@ -1,23 +1,24 @@
 import React, { Component } from 'react';
 import { StyleSheet, KeyboardAvoidingView, Text, TextInput, StatusBar, TouchableOpacity, View, Alert, ActivityIndicator } from 'react-native';
 import firebase from 'react-native-firebase';
+import Loader from '../components/loader';
 
 export default class Signup extends Component {
 
-    state = {name: '', email: '', password: '', confirmPassword: '', isLogin: false}
+    state = {name: '', email: '', password: '', confirmPassword: '', loading: false}
 
     singup = () => {
 
-      this.setState({isLogin: true});  
+      this.setState({loading: true});  
       if(!this.state.name || !this.state.email || !this.state.password || !this.state.confirmPassword) {
           Alert.alert("Você precisa preencher todos os campos");
-          this.setState({isLogin: false});
+          this.setState({loading: false});
           return;
       } 
 
       if(this.state.password != this.state.confirmPassword) {
           Alert.alert("As senha não são iguais");
-          this.setState({isLogin: false});
+          this.setState({loading: false});
           return ;
       }
 
@@ -39,14 +40,14 @@ export default class Signup extends Component {
               default:
                 Alert.alert('Aviso', 'Verifique sua conexão com a internet');
             }
-            this.setState({ isLogin: false });
+            this.setState({ loading: false });
           })
     }
     
     render() {
       return (
       <KeyboardAvoidingView behavior="padding" style={styles.container}>
-
+              <Loader loading={this.state.loading} />
               <View style={styles.formContainer}>
                 <Text style={{color: 'red', alignSelf: 'center', margin: 20}}>{this.state.errorMessage}</Text>
                 <StatusBar barStyle="light-content"/>

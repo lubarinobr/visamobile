@@ -22,7 +22,7 @@ export default class Main extends Component {
 
     }
 
-    didBlur = this.props.navigation.addListener(
+    pageFocus = this.props.navigation.addListener(
         'didFocus',
         payload => {
             this.loadUser();
@@ -34,7 +34,7 @@ export default class Main extends Component {
     }
 
     componentWillUnmount() {
-        didBlur.remove();
+        this.pageFocus.remove();
     }
     
     loadUser = async () => {

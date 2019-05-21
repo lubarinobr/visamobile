@@ -2,18 +2,19 @@
 import React, { Component } from 'react';
 import { View, StyleSheet,KeyboardAvoidingView, StatusBar, TextInput, TouchableOpacity, Text,Alert, ActivityIndicator } from 'react-native';
 import firebase from 'react-native-firebase';
-// create a component
+import Loader from '../components/loader';
+
 class Login extends Component {
 
 
-    state = {email: '', password: '', errorMessage: '', isLogin: false}
+    state = {email: '', password: '', errorMessage: '', loading: false}
 
     login = () => {
-        this.setState({isLogin: true});
+        this.setState({loading: true});
 
         if(!this.state.email || !this.state.password) {
             Alert.alert("Você precisa informar todos os campos");
-            this.setState({isLogin: false});
+            this.setState({loading: false});
             return;
         }
 
@@ -34,14 +35,14 @@ class Login extends Component {
                     Alert.alert('Aviso', 'Verifique a sua conexão com a internet');
                 }
 
-                this.setState({isLogin: false});
+                this.setState({loading: false});
             });
     }
 
     render() {
         return (
         <KeyboardAvoidingView behavior="padding" style={styles.container}>
-
+            <Loader loading={this.state.loading} />
             <View style={styles.formContainer}>
                     <Text style={{alignSelf: 'center', color: 'red', marginTop: 10}}>{this.state.errorMessage}</Text>
                     <StatusBar barStyle="light-content"/>

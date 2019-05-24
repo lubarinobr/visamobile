@@ -39,6 +39,28 @@ class Login extends Component {
             });
     }
 
+    forgotPassword = () => {
+        this.setState({loading: true});
+
+        if(!this.state.email) {
+            Alert.alert("Aviso", "Digite seu e-mail e clique novamente no botão 'esqueci a senha'");
+            this.setState({loading: false});
+            return;
+        }
+
+        firebase
+            .auth()
+            .sendPasswordResetEmail(this.state.email)
+            .then(() => {
+                Alert.alert("Aviso","Nós enviamos um email para você recuperar sua senha.");
+            })
+            .catch(error => {
+                Alert.alert("Erro", "Ocorreu um erro ao tentar recuperar sua senha, tente novamente");
+            });
+
+        this.setState({loading: false});    
+    }
+
     render() {
         return (
         <KeyboardAvoidingView behavior="padding" style={styles.container}>
@@ -48,7 +70,7 @@ class Login extends Component {
                     <StatusBar barStyle="light-content"/>
                     <TextInput style = {styles.input}
                                 onChangeText={email => this.setState({email})} 
-                                autoCapitalize="none" 
+                                autoCapiaroundtalize="none" 
                                 onSubmitEditing={() => this.passwordInput.focus()} 
                                 autoCorrect={false} 
                                 keyboardType='email-address' 
@@ -62,15 +84,21 @@ class Login extends Component {
                                 placeholderTextColor='rgba(225,225,225,0.7)' 
                                 secureTextEntry/>
 
-                    <TouchableOpacity style={styles.buttonContainer} onPress={this.login}>
-                    {this.state.isLogin
-                        ? <ActivityIndicator size="large" style={styles.spinner} color='white' />
-                        : <Text style={styles.buttonText}>Login</Text>}
-                    </TouchableOpacity>
+                    <View style={{alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between', marginTop: 10 }}>
+                        <TouchableOpacity style={styles.buttonContainer} onPress={this.login}>
+                        {this.state.isLogin
+                            ? <ActivityIndicator size="large" style={styles.spinner} color='white' />
+                            : <Text style={styles.buttonText}>Login</Text>}
+                        </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.buttonContainer} onPress={() => this.props.navigation.navigate('Signup')}>
-                        <Text  style={styles.buttonText}>Cadastrar</Text>
-                    </TouchableOpacity> 
+                        <TouchableOpacity style={styles.buttonContainer} onPress={() => this.props.navigation.navigate('Signup')}>
+                            <Text  style={styles.buttonText}>Cadastrar</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    <TouchableOpacity style={styles.forgotButtonContainer} onPress={() => this.forgotPassword()}>
+                        <Text  style={styles.buttonText}>Esqueci a senha</Text>
+                    </TouchableOpacity>
             </View>
                
          
@@ -113,6 +141,14 @@ const styles = StyleSheet.create({
         backgroundColor: '#2980b6',
         paddingVertical: 15,
         marginBottom: 20,
+        width: 150,
+        borderRadius: 8,
+    },
+    forgotButtonContainer:{
+        backgroundColor: '#2980b6',
+        paddingVertical: 15,
+        marginBottom: 20,
+        borderRadius: 8,
     },
     buttonText:{
         color: '#fff',

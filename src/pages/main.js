@@ -6,6 +6,7 @@ import { Avatar } from 'react-native-elements';
 import Notification from '../services/notification';
 import firebase from 'react-native-firebase';
 import Loader from '../components/loader'
+import { Transition } from 'react-navigation-fluid-transitions';
 
 
 export default class Main extends Component {
@@ -22,20 +23,21 @@ export default class Main extends Component {
 
     }
 
-    pageFocus = this.props.navigation.addListener(
-        'didFocus',
-        payload => {
-            this.loadUser();
-        }
-    );
+    // pageFocus = this.props.navigation.addListener(
+    //     // 'didFocus',
+    //     // payload => {
+    //     //     this.loadUser();
+    //     // }
+    // );
 
     componentDidMount() {
         this.loadNotification();
+        this.loadUser();
     }
 
-    componentWillUnmount() {
-        this.pageFocus.remove();
-    }
+    // componentWillUnmount() {
+    //     this.pageFocus.remove();
+    // }
     
     loadUser = async () => {
         this.setState({loading: true, status: '', visaId: ""});
@@ -82,6 +84,7 @@ export default class Main extends Component {
 
     render() {
         return (
+            <Transition appear="top" delay>
             <View style={style.container}>
                 <Loader
                     loading={this.state.loading} />
@@ -97,6 +100,7 @@ export default class Main extends Component {
                 <View style={style.welcome}>
                     <Text style={style.welcomeTitle}>Veja abaixo como anda o status do seu visto.</Text>
                 </View> 
+
                 <View style={style.options}>
                     <ImageBackground
                         borderRadius={8}
@@ -151,6 +155,7 @@ export default class Main extends Component {
                     </TouchableOpacity>
                 </ScrollView>
             </View>
+            </Transition>
         );
 
     }

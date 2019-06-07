@@ -1,4 +1,5 @@
 import { createAppContainer , createBottomTabNavigator, createSwitchNavigator, createStackNavigator } from 'react-navigation';
+import { FluidNavigator } from 'react-navigation-fluid-transitions';
 import Loading from './pages/loading';
 import Signup from './pages/signup';
 import Main from './pages/main';
@@ -8,6 +9,7 @@ import DocumentsDetail from './pages/documents-details';
 import Visa from './pages/visa';
 import VisaEdit from './pages/visa-edit';
 import Login from './pages/login';
+import MainList from './pages/main-list';
 
 const app = createBottomTabNavigator({
     Main,
@@ -21,8 +23,13 @@ const app = createBottomTabNavigator({
     },
 });
 
+const visaScreen = FluidNavigator({
+    MainList,
+    Main
+})
+
 const stackApp = createStackNavigator({
-    Main,
+    visaScreen,
     Documents,
     Config,
     Visa,

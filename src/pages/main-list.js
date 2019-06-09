@@ -1,67 +1,37 @@
 import React , { Component } from 'react';
 import { View, StyleSheet, TextInput, Text } from 'react-native';
-import { List, ListItem } from 'react-native-elements'
-import { TransitionView } from '../components/transition/TransitionView';
+import { ListItem } from 'react-native-elements'
 import { Transition } from 'react-navigation-fluid-transitions';
 import { FlatList, ScrollView } from 'react-native-gesture-handler';
+import { getUserByEmail } from '../services/userService';
+import firebase from 'react-native-firebase';
+import InfoRow from '../components/InfoRow';
 
-const list = [
-    {
-      name: 'Matheus Lubarino',
-      avatar_url: 'https://http2.mlstatic.com/bandeira-portugal-copa-do-mundo-tamanho-oficial-90-x-150-cm-D_NQ_NP_968515-MLB29948285195_042019-F.webp',
-      subtitle: 'Visto Portugal - D3'
-    },
-    {
-      name: 'Gustavo Pereira Lima',
-      avatar_url: 'https://http2.mlstatic.com/bandeira-portugal-copa-do-mundo-tamanho-oficial-90-x-150-cm-D_NQ_NP_968515-MLB29948285195_042019-F.webp',
-      subtitle: 'Visto Portugal - D3'
-    },
-    {
-        name: 'Matheus Lubarino',
-        avatar_url: 'https://http2.mlstatic.com/bandeira-portugal-copa-do-mundo-tamanho-oficial-90-x-150-cm-D_NQ_NP_968515-MLB29948285195_042019-F.webp',
-        subtitle: 'Visto Portugal - D3'
-      },
-      {
-        name: 'Gustavo Pereira Lima',
-        avatar_url: 'https://http2.mlstatic.com/bandeira-portugal-copa-do-mundo-tamanho-oficial-90-x-150-cm-D_NQ_NP_968515-MLB29948285195_042019-F.webp',
-        subtitle: 'Visto Portugal - D3'
-      },
-      {
-        name: 'Matheus Lubarino',
-        avatar_url: 'https://http2.mlstatic.com/bandeira-portugal-copa-do-mundo-tamanho-oficial-90-x-150-cm-D_NQ_NP_968515-MLB29948285195_042019-F.webp',
-        subtitle: 'Visto Portugal - D3'
-      },
-      {
-        name: 'Gustavo Pereira Lima',
-        avatar_url: 'https://http2.mlstatic.com/bandeira-portugal-copa-do-mundo-tamanho-oficial-90-x-150-cm-D_NQ_NP_968515-MLB29948285195_042019-F.webp',
-        subtitle: 'Visto Portugal - D3'
-      },
-      {
-        name: 'Matheus Lubarino',
-        avatar_url: 'https://http2.mlstatic.com/bandeira-portugal-copa-do-mundo-tamanho-oficial-90-x-150-cm-D_NQ_NP_968515-MLB29948285195_042019-F.webp',
-        subtitle: 'Visto Portugal - D3'
-      },
-      {
-        name: 'Gustavo Pereira Lima',
-        avatar_url: 'https://http2.mlstatic.com/bandeira-portugal-copa-do-mundo-tamanho-oficial-90-x-150-cm-D_NQ_NP_968515-MLB29948285195_042019-F.webp',
-        subtitle: 'Visto Portugal - D3'
-      },
-    
-  ];
 
 export default class MainList extends Component {
+
+    state = {
+      user : {}
+    }
+
+    componentDidMount() {
+      this.getUser();
+    }
+
+    getUser = async () => {
+      const { currentUser } = await firebase.auth();
+      let user = await getUserByEmail(currentUser.email);
+      this.setState({user});
+      console.log(this.state.user)
+    }
 
     keyExtractor = (item, index) => index.toString()
 
     renderItem = ({item}) => {
-      return <ListItem
-          leftAvatar={{ source: { uri: item.avatar_url } }}
-          title={item.name}
-          subtitle={item.subtitle}
-          bottomDivider={true}
-          badge={{status: 'warning' }}
-          onPress={() => this.props.navigation.navigate('Main')}
-      />
+      return <InfoRow title={item.owner} 
+                description={item.lastStatus} 
+                icon="account-badge-outline" 
+                navigator={() => this.props.navigation.navigate('Main')}/>
     }
 
     render() {
@@ -84,7 +54,7 @@ export default class MainList extends Component {
                     <ScrollView style={style.list} showsVerticalScrollIndicator={false}>
                     <FlatList 
                         keyExtractor={this.keyExtractor}
-                        data={list}
+                        data={this.state.user.visa}
                         renderItem={this.renderItem}
                       />
                     </ScrollView>
@@ -104,6 +74,6 @@ const style = StyleSheet.create({
     },
     list: {
         marginTop: 10,
-        marginHorizontal: 10
+        marginHorizontal: 5
     }
 });
